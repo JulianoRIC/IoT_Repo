@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, url_for, redirect
 import os
 import paho.mqtt.client as mqtt
 import time
+import webbrowser
 
 
 def on_connect(client, userdata, flags, rc):
@@ -37,8 +38,10 @@ def home():
 
     return render_template("onoff.html")
 
+time.sleep(0.5)
+webbrowser.open('http://127.0.0.1:5000/home')  # Go to IOT GUI
 
 if __name__ == '__main__':
     app.run(debug=True)
-
+    
 client.loop_forever()
