@@ -41,4 +41,4 @@ def home():
 if __name__ == '__main__':
     app.run(debug=True)
 
-#client.loop_forever()
+client.loop_forever()
