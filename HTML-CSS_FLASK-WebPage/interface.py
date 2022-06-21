@@ -25,6 +25,9 @@ def home():
         print("Button was pressed ")
 
         if request.form['btn_on'] == "Manual":
+            client.on_connect = on_connect
+            client.connect("192.168.1.106", 1883,60)
+            client.username_pw_set("grupo4", "grupo4_22")
             print("Modo Manual")
             client.publish('iot/comandos', payload="manual", qos=0, retain=False)
             return render_template("onoff.html")
@@ -32,16 +35,27 @@ def home():
 
         if request.form['btn_on'] == "Automático":
             print("Modo Automático")
+            client.on_connect = on_connect
+            client.connect("192.168.1.106", 1883,60)
+            client.username_pw_set("grupo4", "grupo4_22")
             client.publish('iot/comandos', payload="auto", qos=0, retain=False) 
             return render_template("onoff.html")
-
-
+    
     return render_template("onoff.html")
 
-time.sleep(0.5)
-webbrowser.open('http://127.0.0.1:5000/home')  # Go to IOT GUI
-
-if __name__ == '__main__':
-    app.run(debug=True)
+@app.route('/valueofslider')
+def slide():
+    slide_val = request.args.get('slider_val')
+    print(slide_val)
+    return slide_val
     
+time.sleep(0.5)
+webbrowser.open('http://127.0.0.1:5000/home')  # Go to IOT GUI   
+
+#if __name__ == '__main__':
+
+app.run(debug=True)
+
 client.loop_forever()
+
+
