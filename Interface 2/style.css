@@ -1,0 +1,84 @@
+*{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: "Roboto Mono", monospace;
+    font-weight: 600;
+}
+body{
+    background-color: #ffffff;
+}
+.container{
+    position: absolute;
+    transform: translate(-50%,-50%);
+    top: 30%;
+    left: 50%;
+    display: flex;
+    background-color: #ffffff;
+    border-radius: 45px;
+    box-shadow: 0 20px 30px rgba(0,0,0,0.15);
+}
+input[type="number"]{
+    -moz-appearance: textfield;
+    text-align: center;
+    font-size: 40px;
+    border: none;
+    background-color: #ffffff;
+    color: #202030;
+}
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button{
+    -webkit-appearance: none;
+    margin: 0;
+}
+button{
+    color: #3264fe;
+    background-color: #ffffff;
+    border: none;
+    font-size: 40px;
+    cursor: pointer;
+}
+#decrement{
+    padding: 15px 5px 15px 25px;
+    border-radius: 45px 0 0 45px;
+}
+#increment{
+    padding: 15px 25px 15px 5px;
+    border-radius: 0 45px 45px 0;
+}
+
+.mybuttons {
+	box-shadow:inset 0px 1px 0px 0px #a4e271;
+	background:linear-gradient(to bottom, #89c403 5%, #77a809 100%);
+	background-color:#89c403;
+	border-radius:6px;
+	border:1px solid #74b807;
+	display:inline-block;
+	cursor:pointer;
+	color:#ffffff;
+	font-family:Arial;
+	font-size:15px;
+	font-weight:bold;
+	padding:6px 24px;
+	text-decoration:none;
+	text-shadow:0px 1px 0px #528009;
+}
+.mybuttons:hover {
+	background:linear-gradient(to bottom, #77a809 5%, #89c403 100%);
+	background-color:#77a809;
+}
+.mybuttons:active {
+    border:1px solid #000000;
+}
+
+#On{
+ position: absolute;
+ top: 50%;
+ left: 50%;
+}
+
+#Off{
+    position: absolute;
+    top: 2%;
+    left: 50%;
+   }
