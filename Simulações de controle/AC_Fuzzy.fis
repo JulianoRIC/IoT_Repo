@@ -1,0 +1,47 @@
+[System]
+Name='AC_Fuzzy'
+Type='mamdani'
+Version=2.0
+NumInputs=2
+NumOutputs=1
+NumRules=9
+AndMethod='min'
+OrMethod='max'
+ImpMethod='min'
+AggMethod='max'
+DefuzzMethod='centroid'
+
+[Input1]
+Name='I_POT'
+Range=[0 1027]
+NumMFs=3
+MF1='IPAD':'trimf',[700 1027 1027]
+MF2='IPMD':'trimf',[400 550 700]
+MF3='IPBD':'trimf',[0 0 400]
+
+[Input2]
+Name='T_AMB'
+Range=[4 40]
+NumMFs=3
+MF1='ITIQ':'trimf',[27 40 40]
+MF2='ITIA':'trimf',[18 22.5 27]
+MF3='ITIF':'trimf',[4 4 18]
+
+[Output1]
+Name='T_REF'
+Range=[16 31]
+NumMFs=3
+MF1='OTRCA':'trimf',[16 16 20]
+MF2='OTRCM':'trimf',[20 22 24]
+MF3='OTRCB':'trimf',[24 31 31]
+
+[Rules]
+1 1, 1 (1) : 1
+1 2, 2 (1) : 1
+1 3, 3 (1) : 1
+2 1, 2 (1) : 1
+2 2, 3 (1) : 1
+2 3, 3 (1) : 1
+3 1, 3 (1) : 1
+3 2, 3 (1) : 1
+3 3, 3 (1) : 1
