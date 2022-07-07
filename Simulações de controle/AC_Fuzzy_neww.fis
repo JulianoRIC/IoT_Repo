@@ -1,0 +1,72 @@
+[System]
+Name='AC_Fuzzy_neww'
+Type='mamdani'
+Version=2.0
+NumInputs=2
+NumOutputs=1
+NumRules=28
+AndMethod='min'
+OrMethod='max'
+ImpMethod='min'
+AggMethod='max'
+DefuzzMethod='centroid'
+
+[Input1]
+Name='I_POT'
+Range=[0 1027]
+NumMFs=5
+MF1='IPDMB':'gaussmf',[109 5.329e-15]
+MF2='IPDB':'gaussmf',[80 300]
+MF3='IPDM':'gaussmf',[80 600]
+MF4='IPDA':'gaussmf',[80 781]
+MF5='IPDMA':'gaussmf',[80 1027]
+
+[Input2]
+Name='T_AMB'
+Range=[6 38]
+NumMFs=5
+MF1='ITIMF':'gaussmf',[1.6 6]
+MF2='ITIF':'gaussmf',[2.353 12.96]
+MF3='ITIA':'gaussmf',[2.118 20.12]
+MF4='ITIQ':'gaussmf',[1.976 25.76]
+MF5='ITIMQ':'gaussmf',[5.647 38]
+
+[Output1]
+Name='T_REF'
+Range=[16 31]
+NumMFs=5
+MF1='OTRCMA':'gaussmf',[1.1 16]
+MF2='OTRCA':'gaussmf',[1 20]
+MF3='OTRCM':'gaussmf',[1 23]
+MF4='OTRCB':'gaussmf',[1 26]
+MF5='OTRCMB':'gaussmf',[1.5 31]
+
+[Rules]
+5 5, 1 (1) : 1
+5 4, 2 (1) : 1
+5 3, 3 (1) : 1
+5 2, 4 (1) : 1
+5 1, 5 (1) : 1
+4 4, 2 (1) : 1
+4 3, 3 (1) : 1
+4 2, 4 (1) : 1
+4 1, 5 (1) : 1
+3 5, 5 (1) : 1
+3 4, 4 (1) : 1
+3 3, 5 (1) : 1
+3 2, 5 (1) : 1
+3 1, 5 (1) : 1
+4 5, 2 (1) : 1
+2 5, 4 (1) : 1
+2 4, 4 (1) : 1
+2 3, 5 (1) : 1
+2 2, 5 (1) : 1
+2 1, 5 (1) : 1
+1 5, 4 (1) : 1
+1 4, 5 (1) : 1
+1 3, 5 (1) : 1
+1 2, 5 (1) : 1
+1 1, 5 (1) : 1
+2 0, 5 (1) : 1
+1 0, 5 (1) : 1
+3 0, 4 (1) : 1
