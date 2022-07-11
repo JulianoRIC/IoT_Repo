@@ -1,0 +1,185 @@
+      
+      :root {
+        --primary-color: #007B84;
+        --secondary-color: #00565C;
+        --three-color: #07c1ce;
+        --four-color: #6d6e6e;
+          }
+    .button {
+        text-align:center;
+            }
+
+    .l_lamp {
+        color:rgb(25, 25, 26);
+        font-size: x-large;
+        padding: 15px 32px;
+        text-align:left;
+        position: relative;
+        top: 350px;    
+    }
+
+    .title {
+        color:var(--secondary-color);
+        text-align:center;
+    }
+
+    .mybutton {
+          background-color: var(--primary-color);
+          border: 0.2px ;
+          color: white;
+          padding: 15px 32px;
+          text-align: center;
+          text-decoration: none;
+          display: inline-block;
+          font-size: 16px;
+          border-radius: 12px;
+          border: 0.1px solid var(--three-color);
+          position: relative;
+          top: 350px;
+            }
+
+      .mybutton:hover
+      {
+           background-color: var(--secondary-color);
+           color: white;
+      }
+      .mybutton{
+        width :30%
+    }
+
+      
+    .myButtonImage {
+    background-image: url( 'http://thinkingstiff.com/images/matt.jpg' );
+    display: inline-block;
+    height: 100px;
+    padding: 0;
+    margin: 0;
+    vertical-align: top;
+    width: 100px;
+    position: relative;
+    top: 400px;
+    border: none;
+}
+
+#close-image img {
+    display: block;
+    height: 100px;  
+    width: 100px;
+    border: none;
+    }
+
+#close-CSS {
+    
+    background-size: 100px;
+    height: 100px;  
+    width: 100px;
+    border: none;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+.box-minmax{
+  margin-top: 30px;
+  width: 608px;
+  display: flex;
+  justify-content: space-between;
+  font-size: 20px;
+  color: var(--secondary-color);
+  span:first-child{
+    margin-left: 10px;
+  }
+}
+.range-slider {
+    margin-top: 30vh;
+    
+}
+.rs-range {
+    margin-top: 29px;
+    width: 600px;
+    -webkit-appearance: none;
+    &:focus {
+        outline: none;
+    }
+    &::-webkit-slider-runnable-track {
+        width: 100%;
+        height: 1px;
+        cursor: pointer;
+        box-shadow: none;
+        background: var(--secondary-color);
+        border-radius: 0px;
+        border: 0px solid #010101;
+    }
+    &::-moz-range-track {
+        width: 100%;
+        height: 1px;
+        cursor: pointer;
+        box-shadow: none;
+        background: var(--secondary-color);
+        border-radius: 0px;
+        border: 0px solid #010101;
+    }
+  
+    &::-webkit-slider-thumb {
+        box-shadow: none;
+        border: 0px solid var(--secondary-color);
+        box-shadow: 0px 10px 10px rgba(0,0,0,0.25);
+        height: 42px;
+        width: 22px;
+        border-radius: 22px;
+        background: var(--secondary-color);
+        cursor: pointer;
+        -webkit-appearance: none;
+        margin-top: -20px;
+    }
+  &::-moz-range-thumb{
+        box-shadow: none;
+        border: 0px solid var(--secondary-color);
+        box-shadow: 0px 10px 10px rgba(0,0,0,0.25);
+        height: 42px;
+        width: 22px;
+        border-radius: 22px;
+        background: var(--secondary-color);
+        cursor: pointer;
+        -webkit-appearance: none;
+        margin-top: -20px;
+  }
+  &::-moz-focus-outer {
+    border: 0;
+    }
+}
+.rs-label {
+    
+    position: relative;
+    transform-origin: center center;
+    display: block;
+    width: 98px;
+    height: 98px;
+    background: transparent;
+    border-radius: 50%;
+    line-height: 30px;
+    text-align: center;
+    font-weight: bold;
+    padding-top: 22px;
+    box-sizing: border-box;
+    border: 2px solid var(--secondary-color);
+    margin-top: 20px;
+    margin-left: -38px;
+    left: attr(value);
+    color: var(--secondary-color);
+    font-style: normal;
+    font-weight: normal;
+    line-height: normal;
+    font-size: 36px;
+    &::after {
+        content: "kg";
+        display: block;
+        font-size: 20px;
+        letter-spacing: 0.07em;
+        margin-top: -2px;
+    }
+    
+}

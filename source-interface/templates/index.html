@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>IOT GUI</title>
+    <link rel="stylesheet" href="style.css" />
+    
+</head>
+
+<body>
+    <div class="title" id="1">
+        <h1 class="title">Sistema de Controle do Ar-Condicionado          
+            <hr />
+            <br />
+    </div>
+
+    <div class="button" id="2">
+        <form action="/home" method="post">
+
+        <label class="l_lamp">
+            <b>Aplicar modo de operação:</b>
+        </label>
+        <input type="submit" name="btn_on" value="Automático" class="mybutton">
+        <input type="submit" name="btn_on" value="Manual" class="mybutton">
+        </form>
+    </div>
+
+    <div class="myButtonImage">
+      <button id="close-image"><img src="https://leads2b.com/blog/wp-content/uploads/2020/02/capa-Dashboard-de-vendas.png"
+        onclick="window.location.href='http://192.168.1.106:3000/d/UwEzLL9nk/temperatura?orgId=1';"
+        ></button>
+    </div>
+
+
+   
+</body>
+<INPUT NAME="TEMP" TYPE="RANGE" MIN="16" MAX="25" STEP="1" VALUE="23">
+<INPUT NAME="POT" TYPE="NUMBER" MIN="0" MAX="5000" STEP="10" VALUE="500" SIZE="10">
+  </body>
+
+</html>
+
+
