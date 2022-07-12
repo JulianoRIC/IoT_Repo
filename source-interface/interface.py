@@ -24,9 +24,9 @@ def home():
     if request.method == "POST":
         print("Button was pressed ")
 
-        temp = request.form['TEMP']
-        print(temp)
-        pot = request.form['POT']
+        #temp = request.form['TEMP']
+        #print(temp)
+        #pot = request.form['POT']
 
         if request.form['btn_on'] == "Manual":
             client.on_connect = on_connect
