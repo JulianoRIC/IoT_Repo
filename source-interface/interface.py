@@ -21,22 +21,6 @@ client.username_pw_set("grupo4", "grupo4_22")
 @app.route("/home", methods=["GET", "POST"])
 
 def home():
-<<<<<<< Updated upstream
-    if request.method == "POST":
-        print("Button was pressed ")
-
-        #temp = request.form['TEMP']
-        #print(temp)
-        #pot = request.form['POT']
-
-        if request.form['btn_on'] == "Manual":
-            client.on_connect = on_connect
-            client.connect("192.168.1.106", 1883,60)
-            client.username_pw_set("grupo4", "grupo4_22")
-            print("Modo Manual")
-            client.publish('iot/comandos', payload="manual", qos=0, retain=False)
-            return render_template("index.html")
-=======
 
     return render_template("indexLogin.html")
     
@@ -48,8 +32,6 @@ def login():
     else:
         return render_template("indexLogin.html")
 
-
-
 @app.route("/man", methods=["GET", "POST"])
 
 def man():
@@ -59,9 +41,8 @@ def man():
     client.username_pw_set("grupo4", "grupo4_22")
     temp = request.form.get('TEMP')
     print(temp)
-    #client.publish('iot/comandos', payload= temp, qos=0, retain=False)
+    client.publish('iot/comandos', payload= temp, qos=0, retain=False)
     return render_template("index.html", temp = temp)
->>>>>>> Stashed changes
             
 
 
@@ -71,7 +52,7 @@ def auto():
     potencia = request.form.get('POT')
     print("Modo Automático")
     print(potencia)
-    #client.on_connect = on_connect
+    client.on_connect = on_connect
     
     client.connect("192.168.1.106", 1883,60)
     client.username_pw_set("grupo4", "grupo4_22")
