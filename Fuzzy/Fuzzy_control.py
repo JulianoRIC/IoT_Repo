@@ -4,9 +4,11 @@ import skfuzzy as fuzz
 from skfuzzy import control as ctrl
 import paho.mqtt.client as mqtt
 import time
+import random
 #plt.rcParams["figure.figsize"] = (15, 6)
 
-power = 1000
+power = 0
+temperatura = 20
 
 """
 out_ref -> Referência de temperatura da sala
@@ -120,22 +122,64 @@ def fuzzy_control(temp, pot):
 
 def on_connect(client, userdata, flags, rc):
     print(f"Connected with result code {rc}")
-    client.subscribe("iot/teste")
+    client.subscribe([("iot/teste", 0), ("iot/potencia", 0)])
 
 
+'''
 def on_message(client, userdata, msg):  # , ppayload):
     rows = []
     print(f"{msg.topic} {msg.payload}")
 
     ppayload = (f"{msg.payload}")
     row = ppayload.split("&")
-    temperatura, co_dois, potencia, corrente = row[1], row[2], row[3], row[4]
+    temperatura = row[1]
     reff = int(fuzzy_control(float(temperatura), power))
-    client.publish('iot/comandos', payload=("ref#" +
-                   str(reff)), qos=0, retain=False)
+    client.publish('iot/comandos', payload=(reff), qos=0, retain=False)
     print(f"send {reff} to iot/teste")
     time.sleep(0.2)
+'''
 
+old_reff = 0
+
+def on_message(client, userdata, msg):
+  global temperatura
+  global power    
+  global old_reff
+  
+  if msg.topic == "iot/teste":
+    #update temperatura
+    print(f"{msg.topic} {msg.payload}")
+    ppayload = (f"{msg.payload}")
+    row = ppayload.split("&")
+    temperatura = row[1]
+    print("valor da temperatura medida: ", temperatura)
+    
+    reff = int(fuzzy_control(float(temperatura), float(power)))
+    #ref_artificial = random.randint(21,25)
+    if reff != old_reff:
+        client.publish('iot/comandos', payload=(reff), qos=0, retain=False)
+        old_reff = reff
+    else:
+        pass
+    print(f"send real reference {reff} to iot/teste")
+    #print(f"send artificial reference {ref_artificial} to iot/teste")
+    
+  if msg.topic == "iot/potencia":
+    #update potencia
+    print(f"{msg.topic} {msg.payload}")
+    p_payload = (f"{msg.payload}")
+    row = p_payload.split("&")
+    power = row[1]
+    print("valor da potencia setada pelo sistema: ", power)
+    reff = int(fuzzy_control(float(temperatura), float(power)))
+    #ref_artificial = random.randint(21,25)
+    if reff != old_reff:
+        client.publish('iot/comandos', payload=(reff), qos=0, retain=False)
+        old_reff = reff
+    else:
+        pass
+    print(f"send real reference {reff} to iot/teste")
+    #print(f"send artificial reference {ref_artificial} to iot/teste")
 
 client = mqtt.Client()
 client.on_connect = on_connect
