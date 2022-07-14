@@ -1,0 +1,103 @@
+      
+      :root {
+        --primary-color: #007B84;
+        --secondary-color: #00565C;
+        --three-color: #07c1ce;
+        --four-color: #6d6e6e;
+          }
+    .button {
+        text-align:center;
+            }
+
+    .l_lamp {
+        color:rgb(25, 25, 26);
+        font-size: x-large;
+        padding: 15px 32px;
+        text-align:left;
+        position: absolute;
+        top: 350px;   
+        left: 70px; 
+    }
+
+    .title {
+        color:var(--secondary-color);
+        text-align:center;
+    }
+
+    .mybutton {
+          background-color: var(--primary-color);
+          border: 0.2px ;
+          color: white;
+          padding: 15px 32px;
+          text-align: center;
+          text-decoration: none;
+          display: inline-block;
+          font-size: 16px;
+          border-radius: 12px;
+          border: 0.1px solid var(--three-color);
+            }
+
+      .mybutton:hover
+      {
+           background-color: var(--secondary-color);
+           color: white;
+      }
+      .mybutton{
+        width :350px
+    }
+    #auto{
+        position: absolute;
+        top: 350px;
+        left: 430px;
+    }
+    #man{
+        position: absolute;
+        top: 350px;
+        left: 850px;
+    }
+
+    #on{
+        position: absolute;
+        top: 550px;
+        left: 430px;
+    }
+    #off{
+        position: absolute;
+        top: 550px;
+        left: 850px;
+    }
+      
+    .myButtonImage {
+    background-image: url( 'http://thinkingstiff.com/images/matt.jpg' );
+    display: inline-block;
+    height: 100px;
+    padding: 0;
+    margin: 0;
+    vertical-align: top;
+    width: 100px;
+    position: relative;
+    top: 400px;
+    border: none;
+}
+
+#close-image img {
+    display: block;
+    height: 100px;  
+    width: 100px;
+    border: none;
+    }
+
+#close-CSS {
+    
+    background-size: 100px;
+    height: 100px;  
+    width: 100px;
+    border: none;
+}
+
+.range {
+
+    position: absolute;
+    top: 400px;
+
+}
