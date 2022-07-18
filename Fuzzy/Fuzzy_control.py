@@ -50,10 +50,10 @@ in_pot['IPDMA'] = fuzz.gaussmf(in_pot.universe, 1027, 80)
 in_tamb = ctrl.Antecedent(np.arange(6, 38, 0.2), 'in_tamb')
 
 in_tamb['ITIMF'] = fuzz.gaussmf(in_tamb.universe, 6, 1.6)
-in_tamb['ITIF'] = fuzz.gaussmf(in_tamb.universe, 13, 2.35)
-in_tamb['ITIA'] = fuzz.gaussmf(in_tamb.universe, 20, 2.15)
-in_tamb['ITIQ'] = fuzz.gaussmf(in_tamb.universe, 25.75, 2)
-in_tamb['ITIMQ'] = fuzz.gaussmf(in_tamb.universe, 38, 5.7)
+in_tamb['ITIF'] = fuzz.gaussmf(in_tamb.universe, 12.96, 2.35)
+in_tamb['ITIA'] = fuzz.gaussmf(in_tamb.universe, 20.12, 2.118)
+in_tamb['ITIQ'] = fuzz.gaussmf(in_tamb.universe, 25.72, 1.976)
+in_tamb['ITIMQ'] = fuzz.gaussmf(in_tamb.universe, 38, 5.647)
 
 # in_tamb.view()
 # plt.show()
@@ -79,8 +79,8 @@ rule7 = ctrl.Rule(in_pot['IPDA'] & in_tamb['ITIQ'], out_ref['OTRCA'])
 rule8 = ctrl.Rule(in_pot['IPDA'] & in_tamb['ITIA'], out_ref['OTRCM'])
 rule9 = ctrl.Rule(in_pot['IPDA'] & in_tamb['ITIF'], out_ref['OTRCB'])
 rule10 = ctrl.Rule(in_pot['IPDA'] & in_tamb['ITIMF'], out_ref['OTRCMB'])
-rule11 = ctrl.Rule(in_pot['IPDM'] & in_tamb['ITIMQ'], out_ref['OTRCMB'])
-rule12 = ctrl.Rule(in_pot['IPDM'] & in_tamb['ITIQ'], out_ref['OTRCMB'])
+rule11 = ctrl.Rule(in_pot['IPDM'] & in_tamb['ITIMQ'], out_ref['OTRCB'])
+rule12 = ctrl.Rule(in_pot['IPDM'] & in_tamb['ITIQ'], out_ref['OTRCB'])
 rule13 = ctrl.Rule(in_pot['IPDM'] & in_tamb['ITIA'], out_ref['OTRCMB'])
 rule14 = ctrl.Rule(in_pot['IPDM'] & in_tamb['ITIF'], out_ref['OTRCMB'])
 rule15 = ctrl.Rule(in_pot['IPDM'] & in_tamb['ITIMF'], out_ref['OTRCMB'])
@@ -94,9 +94,9 @@ rule22 = ctrl.Rule(in_pot['IPDMB'] & in_tamb['ITIQ'], out_ref['OTRCMB'])
 rule23 = ctrl.Rule(in_pot['IPDMB'] & in_tamb['ITIA'], out_ref['OTRCMB'])
 rule24 = ctrl.Rule(in_pot['IPDMB'] & in_tamb['ITIF'], out_ref['OTRCMB'])
 rule25 = ctrl.Rule(in_pot['IPDMB'] & in_tamb['ITIMF'], out_ref['OTRCMB'])
-rule26 = ctrl.Rule(in_pot['IPDMA'], out_ref['OTRCMB'])
-rule27 = ctrl.Rule(in_pot['IPDMA'], out_ref['OTRCMB'])
-rule28 = ctrl.Rule(in_pot['IPDMA'], out_ref['OTRCMB'])
+rule26 = ctrl.Rule(in_pot['IPDB'], out_ref['OTRCMB'])
+rule27 = ctrl.Rule(in_pot['IPDMB'], out_ref['OTRCMB'])
+rule28 = ctrl.Rule(in_pot['IPDM'], out_ref['OTRCB'])
 
 # rule29 = ctrl.Rule(in_pot['IPDMB'] | in_tamb['ITIMF'], out_ref['OTRCMB']) Exemplo de regra usando associação tipo "ou"
 
@@ -173,13 +173,16 @@ def on_message(client, userdata, msg):
     print("valor da potencia setada pelo sistema: ", power)
     reff = int(fuzzy_control(float(temperatura), float(power)))
     #ref_artificial = random.randint(21,25)
+    ''''
     if reff != old_reff:
         client.publish('iot/comandos', payload=(reff), qos=0, retain=False)
         old_reff = reff
     else:
         pass
-    print(f"send real reference {reff} to iot/teste")
     #print(f"send artificial reference {ref_artificial} to iot/teste")
+    '''
+    client.publish('iot/comandos', payload=(reff), qos=0, retain=False)   
+    print(f"send real reference {reff} to iot/teste")
 
 client = mqtt.Client()
 client.on_connect = on_connect
