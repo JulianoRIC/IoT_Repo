@@ -158,11 +158,17 @@ def on_message(client, userdata, msg):
         reff = int(fuzzy_control(float(temperatura), float(power)))
         #ref_artificial = random.randint(21,25)
         if reff != old_reff:
-            client.publish('iot/comandos', payload=(reff), qos=0, retain=False)
-            old_reff = reff
+            if reff >= 28:
+                client.publish('iot/comandos', payload="off", qos=0, retain=False)
+                old_reff = reff
+                print(f"send turn off the air conditioner to iot/teste")
+            else:   
+                client.publish('iot/comandos', payload=(reff), qos=0, retain=False)
+                old_reff = reff
+                print(f"send real reference {reff} to iot/teste")
         else:
             pass
-        print(f"send real reference {reff} to iot/teste")
+        #print(f"send real reference {reff} to iot/teste")
         #print(f"send artificial reference {ref_artificial} to iot/teste")
 
     if msg.topic == "iot/potencia":
@@ -181,9 +187,13 @@ def on_message(client, userdata, msg):
     else:
         pass
     #print(f"send artificial reference {ref_artificial} to iot/teste")
-    '''
-        client.publish('iot/comandos', payload=(reff), qos=0, retain=False)
-        print(f"send real reference {reff} to iot/teste")
+    ''' 
+        if reff >= 28:
+            client.publish('iot/comandos', payload="off", qos=0, retain=False)
+            print(f"send turn off the air conditioner to iot/teste")
+        else:   
+            client.publish('iot/comandos', payload=(reff), qos=0, retain=False)
+            print(f"send real reference {reff} to iot/teste")
 
 
 client = mqtt.Client()
