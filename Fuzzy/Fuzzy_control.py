@@ -38,22 +38,22 @@ OTRCMA -> Output de temperatura de referência muito alta
 
 in_pot = ctrl.Antecedent(np.arange(0, 1027, 0.2), 'in_pot')
 
-in_pot['IPDMB'] = fuzz.gaussmf(in_pot.universe, 0, 109)
-in_pot['IPDB'] = fuzz.gaussmf(in_pot.universe, 300, 80)
-in_pot['IPDM'] = fuzz.gaussmf(in_pot.universe, 600, 80)
-in_pot['IPDA'] = fuzz.gaussmf(in_pot.universe, 781, 80)
-in_pot['IPDMA'] = fuzz.gaussmf(in_pot.universe, 1027, 80)
+in_pot['IPDMB'] = fuzz.gaussmf(in_pot.universe, 0, 80)
+in_pot['IPDB'] = fuzz.gaussmf(in_pot.universe, 300, 70)
+in_pot['IPDM'] = fuzz.gaussmf(in_pot.universe, 530, 70)
+in_pot['IPDA'] = fuzz.gaussmf(in_pot.universe, 761, 60)
+in_pot['IPDMA'] = fuzz.gaussmf(in_pot.universe, 1027, 50)
 
 # in_pot.view()
 # plt.show()
 
 in_tamb = ctrl.Antecedent(np.arange(6, 38, 0.2), 'in_tamb')
 
-in_tamb['ITIMF'] = fuzz.gaussmf(in_tamb.universe, 6, 1.6)
-in_tamb['ITIF'] = fuzz.gaussmf(in_tamb.universe, 12.96, 2.35)
-in_tamb['ITIA'] = fuzz.gaussmf(in_tamb.universe, 20.12, 2.118)
-in_tamb['ITIQ'] = fuzz.gaussmf(in_tamb.universe, 25.72, 1.976)
-in_tamb['ITIMQ'] = fuzz.gaussmf(in_tamb.universe, 38, 5.647)
+in_tamb['ITIMF'] = fuzz.gaussmf(in_tamb.universe, 6, 1.2)
+in_tamb['ITIF'] = fuzz.gaussmf(in_tamb.universe, 12.96, 1.5)
+in_tamb['ITIA'] = fuzz.gaussmf(in_tamb.universe, 20.12, 1.5)
+in_tamb['ITIQ'] = fuzz.gaussmf(in_tamb.universe, 25.72, 1.2)
+in_tamb['ITIMQ'] = fuzz.gaussmf(in_tamb.universe, 38, 3.5)
 
 # in_tamb.view()
 # plt.show()
@@ -61,10 +61,10 @@ in_tamb['ITIMQ'] = fuzz.gaussmf(in_tamb.universe, 38, 5.647)
 out_ref = ctrl.Consequent(np.arange(16, 31, 0.2), 'out_ref')
 
 out_ref['OTRCMA'] = fuzz.gaussmf(out_ref.universe, 16, 1.1)
-out_ref['OTRCA'] = fuzz.gaussmf(out_ref.universe, 20, 1)
-out_ref['OTRCM'] = fuzz.gaussmf(out_ref.universe, 23, 1)
-out_ref['OTRCB'] = fuzz.gaussmf(out_ref.universe, 26, 1)
-out_ref['OTRCMB'] = fuzz.gaussmf(out_ref.universe, 31, 1.5)
+out_ref['OTRCA'] = fuzz.gaussmf(out_ref.universe, 20, 0.75)
+out_ref['OTRCM'] = fuzz.gaussmf(out_ref.universe, 23, 0.75)
+out_ref['OTRCB'] = fuzz.gaussmf(out_ref.universe, 26, 0.75)
+out_ref['OTRCMB'] = fuzz.gaussmf(out_ref.universe, 31, 1.3)
 
 # out_ref.view()
 # plt.show()
@@ -94,14 +94,14 @@ rule22 = ctrl.Rule(in_pot['IPDMB'] & in_tamb['ITIQ'], out_ref['OTRCMB'])
 rule23 = ctrl.Rule(in_pot['IPDMB'] & in_tamb['ITIA'], out_ref['OTRCMB'])
 rule24 = ctrl.Rule(in_pot['IPDMB'] & in_tamb['ITIF'], out_ref['OTRCMB'])
 rule25 = ctrl.Rule(in_pot['IPDMB'] & in_tamb['ITIMF'], out_ref['OTRCMB'])
-rule26 = ctrl.Rule(in_pot['IPDB'], out_ref['OTRCMB'])
+#rule26 = ctrl.Rule(in_pot['IPDB'], out_ref['OTRCMB'])
 rule27 = ctrl.Rule(in_pot['IPDMB'], out_ref['OTRCMB'])
-rule28 = ctrl.Rule(in_pot['IPDM'], out_ref['OTRCB'])
+#rule28 = ctrl.Rule(in_pot['IPDM'], out_ref['OTRCB'])
 
 # rule29 = ctrl.Rule(in_pot['IPDMB'] | in_tamb['ITIMF'], out_ref['OTRCMB']) Exemplo de regra usando associação tipo "ou"
 
 agreg = ctrl.ControlSystem([rule1, rule2, rule3, rule4, rule5, rule6, rule7, rule8, rule9, rule10, rule11, rule12, rule13,
-                            rule14, rule15, rule16, rule17, rule18, rule19, rule20, rule21, rule22, rule23, rule24, rule25, rule26, rule27, rule28])
+                            rule14, rule15, rule16, rule17, rule18, rule19, rule20, rule21, rule22, rule23, rule24, rule25, rule27])
 
 controle = ctrl.ControlSystemSimulation(agreg)
 
@@ -141,39 +141,40 @@ def on_message(client, userdata, msg):  # , ppayload):
 
 old_reff = 0
 
+
 def on_message(client, userdata, msg):
-  global temperatura
-  global power    
-  global old_reff
-  
-  if msg.topic == "iot/teste":
-    #update temperatura
-    print(f"{msg.topic} {msg.payload}")
-    ppayload = (f"{msg.payload}")
-    row = ppayload.split("&")
-    temperatura = row[1]
-    print("valor da temperatura medida: ", temperatura)
-    
-    reff = int(fuzzy_control(float(temperatura), float(power)))
-    #ref_artificial = random.randint(21,25)
-    if reff != old_reff:
-        client.publish('iot/comandos', payload=(reff), qos=0, retain=False)
-        old_reff = reff
-    else:
-        pass
-    print(f"send real reference {reff} to iot/teste")
-    #print(f"send artificial reference {ref_artificial} to iot/teste")
-    
-  if msg.topic == "iot/potencia":
-    #update potencia
-    print(f"{msg.topic} {msg.payload}")
-    p_payload = (f"{msg.payload}")
-    row = p_payload.split("&")
-    power = row[1]
-    print("valor da potencia setada pelo sistema: ", power)
-    reff = int(fuzzy_control(float(temperatura), float(power)))
-    #ref_artificial = random.randint(21,25)
-    ''''
+    global temperatura
+    global power
+    global old_reff
+
+    if msg.topic == "iot/teste":
+        # update temperatura
+        print(f"{msg.topic} {msg.payload}")
+        ppayload = (f"{msg.payload}")
+        row = ppayload.split("&")
+        temperatura = row[1]
+        print("valor da temperatura medida: ", temperatura)
+
+        reff = int(fuzzy_control(float(temperatura), float(power)))
+        #ref_artificial = random.randint(21,25)
+        if reff != old_reff:
+            client.publish('iot/comandos', payload=(reff), qos=0, retain=False)
+            old_reff = reff
+        else:
+            pass
+        print(f"send real reference {reff} to iot/teste")
+        #print(f"send artificial reference {ref_artificial} to iot/teste")
+
+    if msg.topic == "iot/potencia":
+        # update potencia
+        print(f"{msg.topic} {msg.payload}")
+        p_payload = (f"{msg.payload}")
+        row = p_payload.split("&")
+        power = row[1]
+        print("valor da potencia setada pelo sistema: ", power)
+        reff = int(fuzzy_control(float(temperatura), float(power)))
+        #ref_artificial = random.randint(21,25)
+        ''''
     if reff != old_reff:
         client.publish('iot/comandos', payload=(reff), qos=0, retain=False)
         old_reff = reff
@@ -181,8 +182,9 @@ def on_message(client, userdata, msg):
         pass
     #print(f"send artificial reference {ref_artificial} to iot/teste")
     '''
-    client.publish('iot/comandos', payload=(reff), qos=0, retain=False)   
-    print(f"send real reference {reff} to iot/teste")
+        client.publish('iot/comandos', payload=(reff), qos=0, retain=False)
+        print(f"send real reference {reff} to iot/teste")
+
 
 client = mqtt.Client()
 client.on_connect = on_connect
