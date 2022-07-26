@@ -11,13 +11,14 @@
 //#include<ADS1115_WE.h> 
 #include<Wire.h>2
 #include "DHT.h"
-#include "EmonLib.h"
+#include "EmonLib.h"0
 #include <String.h>
 
 EnergyMonitor emon1;
 int rede = 220;
 //Pino do sensor SCT
 int pino_sct = 36;
+int presenca = 0;
 
 char* ssid = "LMM";
 char* password =  "mecatronica";
@@ -69,7 +70,6 @@ DHT dht(DHTPIN, DHTTYPE);
 
 float temperatura_ambiente = 23;
 float tempAnt;
-float umidade_relativa;
 // Sensor de presenca
 int pinopir = 12; //Pino ligado ao sensor PIR
 
@@ -77,7 +77,7 @@ void setup() {
   irsend.begin();
   pinMode(pinopir, INPUT);
   Serial.begin(9600);
-    //Pino, calibracao - Cur Const= Ratio/BurdenR. 2000/33 = 60
+  //Pino, calibracao - Cur Const= Ratio/BurdenR. 2000/33 = 60
   emon1.current(pino_sct, 60);
   WiFi.begin(ssid, password);
   while (WiFi.status() != WL_CONNECTED) {
@@ -86,7 +86,7 @@ void setup() {
   }
   Serial.println("Connected to the WiFi network");
 
-    client.setServer(mqttServer, mqttPort);
+   client.setServer(mqttServer, mqttPort);
   client.setCallback(callback);
  
   while (!client.connected()) {
@@ -218,9 +218,7 @@ void callback(char* topic_in, byte* message, unsigned int length) {
     Serial.println("set 27");
     ac_setTemp27();
   }
-  Serial.println();
-  Serial.println("-----------------------");
- 
+  Serial.println(); 
 }
 
 void ac_PowerOn(){
@@ -325,43 +323,28 @@ float pega_temperatura()
   return temperatura_ambiente; 
 }
 
-void pega_umidade()
-{
-  float umd = dht.readHumidity();
-  if (isnan(umd))
-  {
-    Serial.println("Falha ao ler o DHT");
-  }
-  else
-  {
-    umidade_relativa = umd;
-  }
-}
 
 void loop() {
 
+  presenca = digitalRead(pinopir);
+  
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
     Serial.println("Connecting to WiFi..");
   }
-
    while (!client.connected()) {
-    Serial.println("Connecting to MQTT...");
- 
-    if (client.connect("ESP8266Client", mqttUser, mqttPassword )) {
- 
-      Serial.println("connected");  
- 
-    } else {
- 
+    Serial.println("Connecting to MQTT..."); 
+    if (client.connect("ESP8266Client", mqttUser, mqttPassword )) { 
+      Serial.println("connected");   
+    } else { 
       Serial.print("failed with state ");
       Serial.print(client.state());
-      delay(2000);
- 
+      delay(2000); 
     }
   }
+  
  //Calcula a corrente
- double Irms = emon1.calcIrms(1480)/10;
+  double Irms = emon1.calcIrms(1480)/10;
   float co2 = random(3400, 3700)/100;
   float cor = 0;
 
@@ -375,7 +358,7 @@ void loop() {
   String payload = "&";
  
   payload += t; payload += "&";
-  payload += co2; payload += "&";
+  payload += presenca; payload += "&";
   payload += pot; payload += "&";
   payload += cor; payload += "&";
  
