@@ -140,12 +140,17 @@ def on_message(client, userdata, msg):  # , ppayload):
 '''
 
 old_reff = 0
-
+presenca = 0
+status_tempo = 0
+inicio = time.time()
 
 def on_message(client, userdata, msg):
     global temperatura
     global power
     global old_reff
+    global presenca
+    global inicio
+    global status_tempo
 
     if msg.topic == "iot/teste":
         # update temperatura
@@ -153,8 +158,19 @@ def on_message(client, userdata, msg):
         ppayload = (f"{msg.payload}")
         row = ppayload.split("&")
         temperatura = row[1]
+        presenca = row[2]
         print("valor da temperatura medida: ", temperatura)
-
+        if presenca == "1":
+           inicio = time.time()
+           #print("ENTREI AQUIII")
+           status_tempo = 0
+        fim = time.time()
+        if  fim - inicio >= 15 and status_tempo == 0:
+            #print("ENTREI NO IF DEBAIXO")
+            client.publish('iot/comandos', payload="off", qos=0, retain=False)
+            time.sleep(0.1)
+            print(f"send turn off the air conditioner to iot/teste")
+            status_tempo = 1      
         reff = int(fuzzy_control(float(temperatura), float(power)))
         #ref_artificial = random.randint(21,25)
         if reff != old_reff:
@@ -162,8 +178,10 @@ def on_message(client, userdata, msg):
                 client.publish('iot/comandos', payload="off", qos=0, retain=False)
                 old_reff = reff
                 print(f"send turn off the air conditioner to iot/teste")
+                time.sleep(0.1)
             else:   
                 client.publish('iot/comandos', payload=(reff), qos=0, retain=False)
+                time.sleep(0.1)
                 old_reff = reff
                 print(f"send real reference {reff} to iot/teste")
         else:
@@ -190,10 +208,12 @@ def on_message(client, userdata, msg):
     ''' 
         if reff >= 28:
             client.publish('iot/comandos', payload="off", qos=0, retain=False)
+            time.sleep(0.1)
             print(f"send turn off the air conditioner to iot/teste")
         else:   
             client.publish('iot/comandos', payload=(reff), qos=0, retain=False)
             print(f"send real reference {reff} to iot/teste")
+            time.sleep(0.1)
 
 
 client = mqtt.Client()
