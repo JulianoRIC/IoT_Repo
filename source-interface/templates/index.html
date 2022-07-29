@@ -17,15 +17,18 @@
             <hr />
             <br />
     </div>
-
+    
+    <div>
         <form action="/man" method="post">
-        <label class="l_lamp">
-            <b>Aplicar modo de operação:</b>
-        </label>      
+            <label class="l_lamp">
+                <b>Aplicar modo de operação:</b>
+            </label>      
+    
+            <input type="submit" id = "man" name="btn_man" value="Manual" class="mybutton">
+            <INPUT NAME="TEMP" id = "rangTemp" TYPE="range" MIN="16" MAX="27" STEP="1" VALUE = {{temp}} class = "range">
+            </form>
+    </div>
 
-        <input type="submit" id = "man" name="btn_man" value="Manual" class="mybutton">
-        <INPUT NAME="TEMP" id = "rangTemp" TYPE="range" MIN="16" MAX="27" STEP="1" VALUE = {{temp}} class = "range">
-        </form>
 
         <form action="/auto" method="post">
             <input type="submit" id = "auto" name="btn_auto" value="Automático" class="mybutton">

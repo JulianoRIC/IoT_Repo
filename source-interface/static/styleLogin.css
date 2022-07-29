@@ -16,7 +16,8 @@
 }
 
 body {
-	background: linear-gradient(90deg, #C7C5F4, #776BCC);		
+	/*background: linear-gradient(90deg, #C7C5F4, #776BCC);		*/
+	background-image: url('https://identidade.paginas.ufsc.br/files/2014/04/10-1920x1200.jpg');
 }
 
 .container {
