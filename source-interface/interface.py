@@ -41,7 +41,7 @@ def man():
     client.username_pw_set("grupo4", "grupo4_22")
     temp = request.form.get('TEMP')
     print(temp)
-    client.publish('www/comandos', payload= temp, qos=0, retain=False)
+    client.publish('iot/comandos', payload= temp, qos=0, retain=False)
     return render_template("index.html", temp = temp)
             
 
@@ -56,7 +56,7 @@ def auto():
     
     client.connect("192.168.1.106", 1883,60)
     client.username_pw_set("grupo4", "grupo4_22")
-    client.publish('www/potencia', payload= "&"+potencia+"&", qos=0, retain=False) 
+    client.publish('iot/potencia', payload= "&"+potencia+"&", qos=0, retain=False) 
     print(f"Mandei  {potencia} para o broker")
     return render_template("index.html", pot = potencia)
             
