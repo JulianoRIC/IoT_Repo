@@ -122,7 +122,7 @@ def fuzzy_control(temp, pot):
 
 def on_connect(client, userdata, flags, rc):
     print(f"Connected with result code {rc}")
-    client.subscribe([("iot/teste", 0), ("iot/potencia", 0)])
+    client.subscribe([("iot/dados", 0), ("iot/potencia", 0)])
 
 
 '''
@@ -135,7 +135,7 @@ def on_message(client, userdata, msg):  # , ppayload):
     temperatura = row[1]
     reff = int(fuzzy_control(float(temperatura), power))
     client.publish('iot/comandos', payload=(reff), qos=0, retain=False)
-    print(f"send {reff} to iot/teste")
+    print(f"send {reff} to iot/dados")
     time.sleep(0.2)
 '''
 
@@ -152,7 +152,7 @@ def on_message(client, userdata, msg):
     global inicio
     global status_tempo
 
-    if msg.topic == "iot/teste":
+    if msg.topic == "iot/dados":
         # update temperatura
         print(f"{msg.topic} {msg.payload}")
         ppayload = (f"{msg.payload}")
@@ -169,7 +169,7 @@ def on_message(client, userdata, msg):
             #print("ENTREI NO IF DEBAIXO")
             client.publish('iot/comandos', payload="off", qos=0, retain=False)
             time.sleep(0.1)
-            print(f"send turn off the air conditioner to iot/teste")
+            print(f"send turn off the air conditioner to iot/dados")
             status_tempo = 1      
         reff = int(fuzzy_control(float(temperatura), float(power)))
         #ref_artificial = random.randint(21,25)
@@ -177,17 +177,17 @@ def on_message(client, userdata, msg):
             if reff >= 28:
                 client.publish('iot/comandos', payload="off", qos=0, retain=False)
                 old_reff = reff
-                print(f"send turn off the air conditioner to iot/teste")
+                print(f"send turn off the air conditioner to iot/dados")
                 time.sleep(0.1)
             else:   
                 client.publish('iot/comandos', payload=(reff), qos=0, retain=False)
                 time.sleep(0.1)
                 old_reff = reff
-                print(f"send real reference {reff} to iot/teste")
+                print(f"send real reference {reff} to iot/dados")
         else:
             pass
-        #print(f"send real reference {reff} to iot/teste")
-        #print(f"send artificial reference {ref_artificial} to iot/teste")
+        #print(f"send real reference {reff} to iot/dados")
+        #print(f"send artificial reference {ref_artificial} to iot/dados")
 
     if msg.topic == "iot/potencia":
         # update potencia
@@ -204,15 +204,15 @@ def on_message(client, userdata, msg):
         old_reff = reff
     else:
         pass
-    #print(f"send artificial reference {ref_artificial} to iot/teste")
+    #print(f"send artificial reference {ref_artificial} to iot/dados")
     ''' 
         if reff >= 28:
             client.publish('iot/comandos', payload="off", qos=0, retain=False)
             time.sleep(0.1)
-            print(f"send turn off the air conditioner to iot/teste")
+            print(f"send turn off the air conditioner to iot/dados")
         else:   
             client.publish('iot/comandos', payload=(reff), qos=0, retain=False)
-            print(f"send real reference {reff} to iot/teste")
+            print(f"send real reference {reff} to iot/dados")
             time.sleep(0.1)
 
 

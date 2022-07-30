@@ -27,7 +27,7 @@ const int mqttPort = 1883;
 const char* mqttUser = "grupo4";
 const char* mqttPassword = "grupo4_22";
 const char* topic_in = "comandos";
-const char* topic_out = "teste";
+const char* topic_out = "dados";
 
 WiFiClient espClient; 
 PubSubClient client(espClient);
@@ -368,6 +368,6 @@ void loop() {
   payload.toCharArray(mensagem, 300 );
   
   client.loop();
-  client.publish("iot/teste", mensagem);
+  client.publish("iot/dados", mensagem);
   delay(3000);
 }

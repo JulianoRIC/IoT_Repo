@@ -6,7 +6,11 @@ from influxdb_client import InfluxDBClient, Point, WritePrecision
 from influxdb_client.client.write_api import SYNCHRONOUS
 import paho.mqtt.client as mqtt
 
-
+#variaveis para calculo potencia consumida
+val = []
+count = 0
+soma = 0
+pot_med = 0
 
 #Credenciais 
 bucket = "monitor"
@@ -28,11 +32,32 @@ def on_connect(client, userdata, flags, rc):
     print(f"Connected with result code {rc}")
     # subscribe, which need to put into on_connect
     # if reconnect after losing the connection with the broker, it will continue to subscribe to the raspberry/topic topic
-    client.subscribe("iot/teste")
+    client.subscribe("iot/dados")
+
+#calculo potencia media consumida 
+def calcula_pot(pot):
+    global pot_med
+    global soma
+    global count
+    global val
+    val.append(pot)
+    if count < 720:
+        for x in val:
+            soma += float(x)
+        pot_med = soma/len(val)
+    else:
+        val.pop(0)
+        for x in val:
+            soma = soma + float(x)
+        pot_med = soma/720
+    soma = 0
+    print("A potência média é: ", pot_med)
+    count += 1
+    return pot_med
+
 
 # the callback function, it will be triggered when receiving messages
 # A mensagem enviada pelo publisher deve obedecer o formato 10&400&22&37
-
 
 def on_message(client, userdata, msg): #, ppayload):
     rows = []
@@ -40,15 +65,16 @@ def on_message(client, userdata, msg): #, ppayload):
 
     ppayload = (f"{msg.payload}")
     row = ppayload.split("&")
-    temperatura, co_dois, potencia, corrente  = row[1], row[2], row[3], row[4]
+    temperatura, presenca, potencia, corrente  = row[1], row[2], row[3], row[4]
+
     print("Corrente: \n", corrente)
     print("Potencia: \n", potencia)
     print("Temperatura: \n", temperatura)
-    print("CO2: \n", co_dois)
+    print("Presenca: \n", presenca)
     t = influxdb_client.Point("Sensores").tag("DAS", "LMM").field("temperatura", temperatura)
     p = influxdb_client.Point("Sensores").tag("DAS", "LMM").field("potencia", potencia)
     c = influxdb_client.Point("Sensores").tag("DAS", "LMM").field("corrente", corrente)
-    o = influxdb_client.Point("Sensores").tag("DAS", "LMM").field("co_dois", co_dois)
+    o = influxdb_client.Point("Sensores").tag("DAS", "LMM").field("potencia_media", str(calcula_pot(potencia)))
 
     #print("P eh", p)
     write_api.write(bucket=bucket,org=org, record=t)
