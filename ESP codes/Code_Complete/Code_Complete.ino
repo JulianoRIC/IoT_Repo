@@ -335,7 +335,8 @@ void loop() {
    while (!client.connected()) {
     Serial.println("Connecting to MQTT..."); 
     if (client.connect("ESP8266Client", mqttUser, mqttPassword )) { 
-      Serial.println("connected");   
+      Serial.println("connected"); 
+      client.subscribe("iot/comandos");  
     } else { 
       Serial.print("failed with state ");
       Serial.print(client.state());
