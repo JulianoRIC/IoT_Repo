@@ -5,18 +5,236 @@
         --three-color: #07c1ce;
         --four-color: #6d6e6e;
           }
-    .button {
+
+
+          @import url('https://fonts.googleapis.com/css?family=Poppins:400,500,600,700&display=swap');
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+.range{
+  height: 80px;
+  width: 380px;
+  background: #fff;
+  border-radius: 10px;
+  padding: 0 65px 0 45px;
+  box-shadow: 2px 4px 8px rgba(0,0,0,0.1);
+}
+.sliderValue{
+  position: relative;
+  width: 100%;
+}
+.sliderValue span{
+  position: absolute;
+  height: 45px;
+  width: 45px;
+  transform: translateX(-70%) scale(0);
+  font-weight: 500;
+  top: -40px;
+  line-height: 55px;
+  z-index: 2;
+  color: #fff;
+  transform-origin: bottom;
+  transition: transform 0.3s ease-in-out;
+}
+.sliderValue span.show{
+  transform: translateX(-70%) scale(1);
+}
+.sliderValue span:after{
+  position: absolute;
+  content: '';
+  height: 100%;
+  width: 100%;
+  background: var(--secondary-color);
+  border: 3px solid #fff;
+  z-index: -1;
+  left: 50%;
+  transform: translateX(-50%) rotate(45deg);
+  border-bottom-left-radius: 50%;
+  box-shadow: 0px 0px 8px rgba(0,0,0,0.1);
+  border-top-left-radius: 50%;
+  border-top-right-radius: 50%;
+}
+.field{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  position: relative;
+}
+.field .value{
+  position: absolute;
+  font-size: 18px;
+  color: var(--secondary-color);
+  font-weight: 600;
+}
+.field .value.left{
+  left: -22px;
+}
+.field .value.right{
+  right: -43px;
+}
+.range input{
+  -webkit-appearance: none;
+  width: 100%;
+  height: 3px;
+  background: #ddd;
+  border-radius: 5px;
+  outline: none;
+  border: none;
+  z-index: 2222;
+}
+.range input::-webkit-slider-thumb{
+  -webkit-appearance: none;
+  width: 20px;
+  height: 20px;
+  background: red;
+  border-radius: 50%;
+  background: var(--secondary-color);
+  border: 1px solid var(--secondary-color);
+  cursor: pointer;
+}
+.range input::-moz-range-thumb{
+  -webkit-appearance: none;
+  width: 20px;
+  height: 20px;
+  background: red;
+  border-radius: 50%;
+  background: var(--secondary-color);
+  border: 1px solid var(--secondary-color);
+  cursor: pointer;
+}
+.range input::-moz-range-progress{
+  background: var(--secondary-color); //this progress background is only shown on Firefox
+}
+
+
+.sliderValues{
+    position: relative;
+    width: 100%;
+  }
+  .sliderValues span{
+    position: absolute;
+    height: 45px;
+    width: 45px;
+    transform: translateX(-70%) scale(0);
+    font-weight: 500;
+    top: -40px;
+    line-height: 55px;
+    z-index: 2;
+    color: #fff;
+    transform-origin: bottom;
+    transition: transform 0.3s ease-in-out;
+  }
+  .sliderValues span.show{
+    transform: translateX(-70%) scale(1);
+  }
+  .sliderValues span:after{
+    position: absolute;
+    content: '';
+    height: 100%;
+    width: 100%;
+    background: var(--secondary-color);
+    border: 3px solid #fff;
+    z-index: -1;
+    left: 50%;
+    transform: translateX(-50%) rotate(45deg);
+    border-bottom-left-radius: 50%;
+    box-shadow: 0px 0px 8px rgba(0,0,0,0.1);
+    border-top-left-radius: 50%;
+    border-top-right-radius: 50%;
+  }
+  .fields{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    position: relative;
+  }
+  .fields .value{
+    position: absolute;
+    font-size: 18px;
+    color: var(--secondary-color);
+    font-weight: 600;
+  }
+  .fields .value.left{
+    left: -22px;
+  }
+  .fields .value.right{
+    right: -43px;
+  }
+  .ranges input{
+    -webkit-appearance: none;
+    width: 100%;
+    height: 3px;
+    background: #ddd;
+    border-radius: 5px;
+    outline: none;
+    border: none;
+    z-index: 2222;
+  }
+  .ranges input::-webkit-slider-thumb{
+    -webkit-appearance: none;
+    width: 20px;
+    height: 20px;
+    background: red;
+    border-radius: 50%;
+    background: var(--secondary-color);
+    border: 1px solid var(--secondary-color);
+    cursor: pointer;
+  }
+  .ranges input::-moz-range-thumb{
+    -webkit-appearance: none;
+    width: 20px;
+    height: 20px;
+    background: red;
+    border-radius: 50%;
+    background: var(--secondary-color);
+    border: 1px solid var(--secondary-color);
+    cursor: pointer;
+  }
+  .ranges input::-moz-range-progress{
+    background: var(--secondary-color); //this progress background is only shown on Firefox
+  }
+  
+  
+  .button {
         text-align:center;
             }
+            
+    .cdiv {
+        position: relative;
+        top: 60%;
+        display: flex;
+        justify-content: center;
+            }
 
+            .c2div {
+                position: relative;
+                top: 40%;
+                display: flex;
+                justify-content: center;
+                    }
+                    .csdiv {
+                        position: relative;
+                        top: 400%;
+                        display: flex;
+                        justify-content: center;
+                            }       
+
+                            .c3div {
+                                position: relative;
+                                top: 420%;
+                                display: flex;
+                                justify-content: center;
+                                    }  
     .l_lamp {
-        color:rgb(25, 25, 26);
+        color:var(--secondary-color);
         font-size: x-large;
         padding: 15px 32px;
         text-align:left;
-        position: absolute;
-        top: 350px;   
-        left: 70px; 
     }
 
     .title {
@@ -24,6 +242,19 @@
         text-align:center;
     }
 
+    .container{
+        display: flex;
+        justify-content: center;
+    }
+    .container2{
+        display: flex;
+        justify-content: center;
+        top: 80px;
+    }
+    .contButton{
+        left: 150%;
+
+    }
     .mybutton {
           background-color: var(--primary-color);
           border: 0.2px ;
@@ -43,29 +274,26 @@
            color: white;
       }
       .mybutton{
-        width :350px
+        width :85%;
     }
     #auto{
-        position: absolute;
-        top: 350px;
-        left: 430px;
+        position: relative;
+
     }
     #man{
-        position: absolute;
-        top: 350px;
-        left: 850px;
+        position: relative;
+        
     }
 
     #on{
-        position: absolute;
-        top: 550px;
-        left: 430px;
+        position: relative;
+        width :200%;
     }
     #off{
-        position: absolute;
-        top: 550px;
-        left: 850px;
+        position: relative;
+        width :200%;
     }
+
       
     .myButtonImage {
     background-image: url( 'http://thinkingstiff.com/images/matt.jpg' );
@@ -95,9 +323,3 @@
     border: none;
 }
 
-.range {
-
-    position: absolute;
-    top: 400px;
-
-}

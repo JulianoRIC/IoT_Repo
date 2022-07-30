@@ -3,9 +3,11 @@
 
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE-edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>IOT GUI</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"/>
-    <script>type="text/javascript" src="{{ url_for('static', filename='script.js') }}">
+    <script>type="text/javascript" ;src="{{ url_for('static', filename='script.js') }}">
     </script>
 
 </head>
@@ -18,31 +20,108 @@
             <br />
     </div>
     
-    <div>
-        <form action="/man" method="post">
+    <div class = "container"> 
+
+        <div>
             <label class="l_lamp">
                 <b>Aplicar modo de operação:</b>
             </label>      
+          </div>
     
-            <input type="submit" id = "man" name="btn_man" value="Manual" class="mybutton">
-            <INPUT NAME="TEMP" id = "rangTemp" TYPE="range" MIN="16" MAX="27" STEP="1" VALUE = {{temp}} class = "range">
-            </form>
     </div>
 
 
-        <form action="/auto" method="post">
-            <input type="submit" id = "auto" name="btn_auto" value="Automático" class="mybutton">
-            <INPUT NAME="POT" TYPE="number" MIN="0" MAX="5000" STEP="1"  SIZE="10" VALUE = {{pot}}>       
-        </form>
+    <div class = "container"> 
 
+        <form action="/man" method="post">
+           
+            <div class="c2div">
+
+            <div class="range">
+                <div class="sliderValue">
+                  <span>23</span>
+                </div>
+        <div class="field">
+                  <div class="value left">
+        16</div>
+        <input NAME="TEMP" type="range" min="16" max="26" value={{temp}} steps="1">
+                  <div class="value right">
+        26</div>
+        </div>
+        </div>
+    </div>   
+           
+            <div class = "cdiv">
+                <input type="submit" id = "man" name="btn_man" value="Manual" class="mybutton">
+            </div>          
+            </form>
+
+
+
+
+
+            <form action="/auto" method="post">
+
+             <div class="c2div">
+               
+                <div class="range">
+                    <div class="sliderValues">
+                      <span>700</span>
+                    </div>
+            <div class="fields">
+                      <div class="value left">
+            0</div>
+            <input NAME="POT" type="range" min="0" max="1023" value={{pot}} steps="10">
+                      <div class="value right">
+            1023</div>
+            </div>
+            </div>
+
+             </div>   
+
+
+                <div class = "cdiv">
+                    <input type="submit" id = "auto" name="btn_auto" value="Automático" class="mybutton">  
+                </div>       
+            </form>
+
+
+
+    </div>
+
+    <div class="container2">
         <form action="/on" method="post">   
-    
-            <input type="submit" id = "on" name="btn_on" value="Ligar" class="mybutton">
-            </form>
-    
-            <form action="/off" method="post">
-                <input type="submit" id = "off" name="btn_off" value="Desligar" class="mybutton">   
-            </form>
+
+            <div class = "csdiv">
+                <input type="submit" id = "on" name="btn_on" value="Ligar aparelho" class="mybutton">
+            </div>   
+           
+         
+        </form>
+    </div> 
+        <div class="container2">
+
+        <form action="/off" method="post">
+            <div class = "c3div">
+                <input type="submit" id = "off" name="btn_off" value="Desligar aparelho" class="mybutton"> 
+            </div>   
+              
+        </div> 
+       </form>  
+
+       
+    </div>
+
+
+
+
+          
+
+
+
+      
+
+
 
  
 
@@ -52,7 +131,33 @@
         ></button>
     </div>
 
-    
+    <script>
+        const slideValue = document.querySelector("span");
+        const inputSlider = document.querySelector("input");
+        inputSlider.oninput = (()=>{
+          let value = inputSlider.value;
+          slideValue.textContent = "  " + value +" ºC";
+          slideValue.style.left = ((value-15.7)*10) + "%";
+          slideValue.classList.add("show");
+        });
+        inputSlider.onblur = (()=>{
+          slideValue.classList.remove("show");
+        });
+      </script>
+      
+      <script>
+        const slideValues = document.querySelector("span");
+        const inputSliders = document.querySelector("input");
+        inputSliders.oninput = (()=>{
+          let values= inputSliders.value;
+          slideValues.textContent = "  " + values +" ºC";
+          slideValues.style.left = ((values-15.7)*10) + "%";
+          slideValues.classList.add("show");
+        });
+        inputSliders.onblur = (()=>{
+          slideValues.classList.remove("show");
+        });
+      </script>
   </body>
 
 </html>

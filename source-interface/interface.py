@@ -15,8 +15,9 @@ app.config['SESSION_COOKIE_SECURE'] = False
 #conectando com o broker MQTT
 client = mqtt.Client()
 client.on_connect = on_connect
-client.connect("192.168.1.106", 1883,60)
-client.username_pw_set("grupo4", "grupo4_22")
+client.connect("test.mosquitto.org", 1883,60)
+#client.connect("192.168.1.106", 1883,60)
+#client.username_pw_set("grupo4", "grupo4_22")
 
 @app.route("/home", methods=["GET", "POST"])
 
@@ -37,11 +38,12 @@ def login():
 def man():
     
     client.on_connect = on_connect
-    client.connect("192.168.1.106", 1883,60)
-    client.username_pw_set("grupo4", "grupo4_22")
+    #client.connect("192.168.1.106", 1883,60)
+    client.connect("test.mosquitto.org", 1883,60)
+    #client.username_pw_set("grupo4", "grupo4_22")
     temp = request.form.get('TEMP')
     print(temp)
-    client.publish('iot/comandos', payload= temp, qos=0, retain=False)
+    client.publish('www/comandos', payload= temp, qos=0, retain=False)
     return render_template("index.html", temp = temp)
             
 
@@ -54,9 +56,10 @@ def auto():
     print(potencia)
     client.on_connect = on_connect
     
-    client.connect("192.168.1.106", 1883,60)
-    client.username_pw_set("grupo4", "grupo4_22")
-    client.publish('iot/potencia', payload= "&"+potencia+"&", qos=0, retain=False) 
+    #client.connect("192.168.1.106", 1883,60)
+    #client.username_pw_set("grupo4", "grupo4_22")
+    client.connect("test.mosquitto.org", 1883,60)
+    client.publish('www/potencia', payload= "&"+potencia+"&", qos=0, retain=False) 
     print(f"Mandei  {potencia} para o broker")
     return render_template("index.html", pot = potencia)
             
@@ -65,8 +68,9 @@ def auto():
 def on():    
     print("Liga enviado")
     client.on_connect = on_connect    
-    client.connect("192.168.1.106", 1883,60)
-    client.username_pw_set("grupo4", "grupo4_22")
+    #client.connect("192.168.1.106", 1883,60)
+    #client.username_pw_set("grupo4", "grupo4_22")
+    client.connect("test.mosquitto.org", 1883,60)
     client.publish('iot/comandos', payload= "on", qos=0, retain=False) 
     return render_template("index.html")
 
@@ -75,8 +79,9 @@ def on():
 def off():    
     print("Desliga enviado")
     client.on_connect = on_connect    
-    client.connect("192.168.1.106", 1883,60)
-    client.username_pw_set("grupo4", "grupo4_22")
+   # client.connect("192.168.1.106", 1883,60)
+    #client.username_pw_set("grupo4", "grupo4_22")
+    client.connect("test.mosquitto.org", 1883,60)
     client.publish('iot/comandos', payload= "off", qos=0, retain=False) 
     return render_template("index.html")
 
