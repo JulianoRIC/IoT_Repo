@@ -125,42 +125,6 @@ void callback(char* topic_in, byte* message, unsigned int length) {
     message_in += (char)message[i];
   }
 
-/*  switch (message_in) {
-  case "on":
-    Serial.println("set on");
-    ac_PowerOn();
-    delay(500);     
-    break;
-  case "off":
-    Serial.println("set off");
-    ac_PowerOff(); 
-    break;
-  case "21":
-    Serial.println("set 21");
-    ac_setTemp21();
-    break;   
-  case "22":
-    Serial.println("set 22");
-    ac_setTemp22();
-    break;    
-  case "23":
-    Serial.println("set 23");
-    ac_setTemp23();
-    break;    
-   case "24":
-    Serial.println("set 24");
-    ac_setTemp24();
-    break;    
-   case "25":
-    Serial.println("set 25");
-    ac_setTemp25();
-    break;                
-  default:
-    // Se nenhum dos anteriores, faz o caso padrão default
-    // default é opcional
-    break;
-  }*/
-
   if(message_in == "on"){
     Serial.println("set on");
     ac_PowerOn();

@@ -5,6 +5,10 @@ from skfuzzy import control as ctrl
 import paho.mqtt.client as mqtt
 import time
 import random
+import requests
+import json
+
+
 #plt.rcParams["figure.figsize"] = (15, 6)
 
 power = 0
@@ -58,6 +62,18 @@ in_tamb['ITIMQ'] = fuzz.gaussmf(in_tamb.universe, 38, 3.5)
 # in_tamb.view()
 # plt.show()
 
+in_text = ctrl.Antecedent(np.arange(5, 40, 0.2), 'in_text')
+
+in_text['ITEMF'] = fuzz.gaussmf(in_text.universe, 5, 1.2)
+in_text['ITEF'] = fuzz.gaussmf(in_text.universe, 12, 1.5)
+in_text['ITEA'] = fuzz.gaussmf(in_text.universe, 20, 1.5)
+in_text['ITEQ'] = fuzz.gaussmf(in_text.universe, 27, 1.2)
+in_text['ITEMQ'] = fuzz.gaussmf(in_text.universe, 40, 3.5)
+
+#in_text.view()
+# plt.show()
+
+
 out_ref = ctrl.Consequent(np.arange(16, 31, 0.2), 'out_ref')
 
 out_ref['OTRCMA'] = fuzz.gaussmf(out_ref.universe, 16, 1.1)
@@ -97,18 +113,32 @@ rule25 = ctrl.Rule(in_pot['IPDMB'] & in_tamb['ITIMF'], out_ref['OTRCMB'])
 #rule26 = ctrl.Rule(in_pot['IPDB'], out_ref['OTRCMB'])
 rule27 = ctrl.Rule(in_pot['IPDMB'], out_ref['OTRCMB'])
 #rule28 = ctrl.Rule(in_pot['IPDM'], out_ref['OTRCB'])
-
 # rule29 = ctrl.Rule(in_pot['IPDMB'] | in_tamb['ITIMF'], out_ref['OTRCMB']) Exemplo de regra usando associação tipo "ou"
+rule28 = ctrl.Rule(in_pot['IPDMA'] & in_tamb['ITIQ'] & in_text['ITEMQ'], out_ref['OTRCMA'])
+rule29 = ctrl.Rule(in_pot['IPDMA'] & in_tamb['ITIA'] & in_text['ITEMQ'], out_ref['OTRCA'])
+rule30 = ctrl.Rule(in_text['ITEMF'] | in_text['ITEF'], out_ref['OTRCMB'])
+
 
 agreg = ctrl.ControlSystem([rule1, rule2, rule3, rule4, rule5, rule6, rule7, rule8, rule9, rule10, rule11, rule12, rule13,
-                            rule14, rule15, rule16, rule17, rule18, rule19, rule20, rule21, rule22, rule23, rule24, rule25, rule27])
+                            rule14, rule15, rule16, rule17, rule18, rule19, rule20, rule21, rule22, rule23, rule24, rule25, rule27, rule28,rule29,rule30])
 
 controle = ctrl.ControlSystemSimulation(agreg)
 
 
 def fuzzy_control(temp, pot):
+
+    try:
+        response = requests.get("https://api.hgbrasil.com/weather?woeid=90200648")
+        a = (response.json())
+        b = int((a['results']).get('temp'))
+        print(b)
+    except:
+        print("An exception occurred")
+        pass
+
     controle.input['in_pot'] = pot
     controle.input['in_tamb'] = temp
+    controle.input['in_text'] = b
     controle.compute()
 
     ref = (controle.output['out_ref'])
@@ -165,7 +195,7 @@ def on_message(client, userdata, msg):
            #print("ENTREI AQUIII")
            status_tempo = 0
         fim = time.time()
-        if  fim - inicio >= 15 and status_tempo == 0:
+        if  fim - inicio >= 300 and status_tempo == 0:
             #print("ENTREI NO IF DEBAIXO")
             client.publish('iot/comandos', payload="off", qos=0, retain=False)
             time.sleep(0.1)
