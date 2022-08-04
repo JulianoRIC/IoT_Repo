@@ -1,3 +1,6 @@
+#Autores: Juliano Rics e Valdecir Hoffmann
+#Codigo para recebimento dos dados sensoriais enviados pelo broker e envio destes ao banco de dados InfluxDB
+
 from datetime import datetime
 from dotenv import load_dotenv, main
 import os
@@ -31,7 +34,7 @@ write_api = cliente.write_api(write_options=SYNCHRONOUS)
 def on_connect(client, userdata, flags, rc):
     print(f"Connected with result code {rc}")
     # subscribe, which need to put into on_connect
-    # if reconnect after losing the connection with the broker, it will continue to subscribe to the raspberry/topic topic
+    # if reconnect after losing the connection with the broker, it will continue to subscribe to the topic
     client.subscribe("iot/dados")
 
 #calculo potencia media consumida 
@@ -58,7 +61,6 @@ def calcula_pot(pot):
 
 # the callback function, it will be triggered when receiving messages
 # A mensagem enviada pelo publisher deve obedecer o formato 10&400&22&37
-
 def on_message(client, userdata, msg): #, ppayload):
     rows = []
     print(f"{msg.topic} {msg.payload}")
@@ -76,13 +78,10 @@ def on_message(client, userdata, msg): #, ppayload):
     c = influxdb_client.Point("Sensores").tag("DAS", "LMM").field("corrente", corrente)
     o = influxdb_client.Point("Sensores").tag("DAS", "LMM").field("potencia_media", str(calcula_pot(potencia)))
 
-    #print("P eh", p)
     write_api.write(bucket=bucket,org=org, record=t)
     write_api.write(bucket=bucket,org=org, record=p)     
     write_api.write(bucket=bucket,org=org, record=c)
     write_api.write(bucket=bucket,org=org, record=o)   
-
-
 
 
 ################### Parte do Subscriber do Broker #######################################################
@@ -91,11 +90,8 @@ client.on_connect = on_connect
 client.on_message = on_message
 client.username_pw_set("grupo4", "grupo4_22")
 
-# set the will message, when the Raspberry Pi is powered off, or the network is interrupted abnormally, it will send the will message to other clients
-#client.will_set('raspberry/status', b'{"status": "Off"}')
-
 # create connection, the three parameters are broker address, broker port number, and keep-alive time respectively
-#client.connect("broker.emqx.io", 1883, 60)
+#client.connect("broker.emqx.io", 1883, 60) #se quiser conectar ao broker publico
 client.connect("192.168.1.106", 1883, 60)
 
 # set the network loop blocking, it will not actively end the program before calling disconnect() or the program crash

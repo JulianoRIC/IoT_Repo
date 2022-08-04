@@ -1,14 +1,16 @@
+//Autores
+//principal: Cristian de Biasi
+//co-autores:Juliano Rics e Valdecir Hoffmann
+//Codigo para recebimento e envio de mensagens ao broker (ESP 32 --> broker )e também aos periféricos (sensores/ar-condicionado)
+
 //Adicionando bibliotecas
 #include <Arduino.h>
 #include <IRremoteESP8266.h>
 #include <IRsend.h>
-//#include <ESP8266WiFi.h>
-//#include <ESP8266Ping.h>
 #include <WiFi.h>
 #include <ArduinoJson.h>
 #include <PubSubClient.h>
 #include <Time.h>
-//#include<ADS1115_WE.h> 
 #include<Wire.h>2
 #include "DHT.h"
 #include "EmonLib.h"0
@@ -16,10 +18,10 @@
 
 EnergyMonitor emon1;
 int rede = 220;
-//Pino do sensor SCT
-int pino_sct = 36;
-int presenca = 0;
+int pino_sct = 36;  //Pino do sensor SCT (sensor de corrente)
+int presenca = 0;   //sensor PIR
 
+//credenciais do broker
 char* ssid = "LMM";
 char* password =  "mecatronica";
 const char* mqttServer = "192.168.1.106";
@@ -32,9 +34,10 @@ const char* topic_out = "dados";
 WiFiClient espClient; 
 PubSubClient client(espClient);
 
-
 const uint16_t kIrLed = 4;  // ESP8266 GPIO pin to use. Recommended: 4 (D2).
 IRsend irsend(kIrLed);  // Set the GPIO to be used to sending the message.
+
+//Comandos/códigos infravermelho do ar-condicionado:
 
 uint16_t poweroff[] = {2886, 1854,  380, 1166,  354, 1192,  354, 470,  332, 494,  380, 446,  380, 1164,  380, 444,  380, 460,  382, 1164,  380, 1166,  404, 422,  380, 1164,  406, 420,  404, 420,  404, 1142,  382, 1178,  406, 420,  404, 1142,  404, 1142,  406, 418,  382, 444,  380, 1166,  382, 444,  382, 458,  380, 1164,  380, 444,  380, 444,  380, 444,  380, 444,  356, 470,  380, 444,  380, 460,  382, 442,  378, 446,  380, 444,  380, 446,  380, 444,  380, 446,  404, 420,  380, 458,  406, 418,  380, 444,  406, 1140,  382, 444,  378, 446,  380, 1164,  382, 444,  380, 458,  382, 1164,  406, 1142,  382, 444,  380, 444,  380, 444,  380, 446,  380, 446,  380, 458,  382, 444,  380, 446,  380, 444,  380, 1166,  406, 420,  378, 446,  378, 446,  380, 458,  380, 1166,  406, 418,  380, 1166,  404, 420,  404, 420,  380, 444,  380, 1164,  406, 434,  406, 420,  380, 446,  380, 444,  404, 446,  354, 444,  402, 422,  378, 470,  354, 460,  380, 448,  400, 424,  378, 470,  354, 444,  380, 446,  378, 446,  378, 470,  354, 460,  380, 448,  378, 446,  378, 448,  376, 446,  378, 470,  354, 446,  380, 446,  380, 458,  380, 470,  354, 470,  354, 470,  352, 472,  354, 470,  354, 470,  354, 470,  354, 462,  378, 1166,  380, 470,  354, 472,  354, 1168,  380, 470,  354, 472,  352, 448,  378, 1184,  378};  // UNKNOWN C8080FBE
 
@@ -64,14 +67,14 @@ uint16_t set_temp_27[] = {2932, 1804, 376, 1168, 376, 1168, 456, 396, 352, 472, 
 
 uint16_t powerOn[] =  {2938, 1784,  326, 1218,  328, 1218,  378, 444,  380, 446,  404, 420,  404, 1142,  404, 420,  404, 434,  406, 1140,  430, 1116,  404, 420,  406, 1142,  404, 418,  406, 420,  406, 1140,  406, 1154,  406, 420,  430, 1118,  428, 1116,  406, 420,  404, 420,  406, 1116,  430, 418,  406, 410,  430, 1140,  428, 396,  406, 420,  404, 396,  404, 420,  404, 444,  380, 420,  406, 434,  404, 420,  406, 444,  380, 444,  406, 396,  404, 444,  404, 396,  406, 444,  380, 434,  406, 422,  404, 420,  406, 442,  380, 444,  408, 416,  380, 1140,  432, 418,  406, 408,  430, 1116,  432, 1116,  430, 418,  406, 418,  406, 418,  406, 420,  406, 420,  406, 408,  430, 418,  406, 418,  406, 420,  406, 1140,  406, 418,  406, 418,  406, 418,  406, 432,  406, 1140,  406, 420,  406, 1140,  406, 420,  404, 420,  406, 420,  380, 1166,  406, 434,  380, 444,  406, 418,  382, 444,  404, 420,  380, 444,  380, 444,  382, 444,  380, 460,  380, 446,  380, 446,  378, 444,  380, 446,  380, 446,  378, 446,  380, 444,  378, 460,  380, 446,  404, 420,  378, 446,  380, 446,  380, 444,  378, 472,  354, 446,  378, 458,  354, 472,  352, 496,  354, 472,  354, 448,  376, 472,  328, 472,  378, 472,  352, 486,  328, 1216,  328, 498,  326, 1218,  330, 496,  328, 498,  300, 524,  328, 496,  328, 1210,  352};  // UNKNOWN 2D337BE8
 
-#define DHTPIN 5            // pino do DHT11
+#define DHTPIN 5            // pino do DHT11 (sensor de temperatura)
 #define DHTTYPE DHT11       // tipo do sensor: DHT 11
 DHT dht(DHTPIN, DHTTYPE);
 
+//inicializacao das variaveis
 float temperatura_ambiente = 23;
 float tempAnt;
-// Sensor de presenca
-int pinopir = 12; //Pino ligado ao sensor PIR
+int pinopir = 12; //Pino ligado ao sensor PIR (sensor de presenca)
 
 void setup() {
   irsend.begin();
@@ -86,9 +89,10 @@ void setup() {
   }
   Serial.println("Connected to the WiFi network");
 
-   client.setServer(mqttServer, mqttPort);
+  client.setServer(mqttServer, mqttPort);
   client.setCallback(callback);
  
+  //tenta se comunicar com o broker
   while (!client.connected()) {
     Serial.println("Connecting to MQTT...");
  
@@ -105,9 +109,11 @@ void setup() {
     }
   }
 
-  client.subscribe("iot/comandos");
+  client.subscribe("iot/comandos"); //se inscreve no tópico de comandos 
 }
 
+
+//trata a mensagem recebida através do broker
 void callback(char* topic_in, byte* message, unsigned int length) {
 
   String message_in;
@@ -124,7 +130,8 @@ void callback(char* topic_in, byte* message, unsigned int length) {
     Serial.print((char)message[i]);
     message_in += (char)message[i];
   }
-
+  
+  //aciona ar-condicionado conforme comado recebido
   if(message_in == "on"){
     Serial.println("set on");
     ac_PowerOn();
@@ -184,6 +191,8 @@ void callback(char* topic_in, byte* message, unsigned int length) {
   }
   Serial.println(); 
 }
+
+//funcoes com os comandos para o ar-condicionado
 
 void ac_PowerOn(){
     irsend.sendRaw(poweroff, sizeof(poweroff) / sizeof(poweroff[0]), 38);  // Send a raw data capture at 38kHz.
@@ -268,12 +277,14 @@ void ac_setTemp27(){
     Serial.println("Comando de alterar a temperatura para 27ºC enviado.");  
 }
 
+//adquire valor de temperatura do sensor DHT11
 float pega_temperatura()
 {
   float temp =  dht.readTemperature();
   tempAnt = temperatura_ambiente; 
 
-  if (isnan(temp) || (temp < 0) || (temp > 50))
+  //filtra valores
+  if (isnan(temp) || (temp < 0) || (temp > 50))  
   {
     Serial.println("Falha ao ler o DHT");
     temperatura_ambiente = tempAnt;
@@ -287,15 +298,18 @@ float pega_temperatura()
   return temperatura_ambiente; 
 }
 
+//loop principal
 
 void loop() {
 
-  presenca = digitalRead(pinopir);
+  presenca = digitalRead(pinopir);  //detecta presenca no ambiente
   
+  //tenta se conectar com o wifi caso ainda nao estiver conectado (ou se perdeu a conexão)
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
     Serial.println("Connecting to WiFi..");
   }
+   //tenta se conectar com o broker e se reinscreve no topico(caso nao esteja conectado)
    while (!client.connected()) {
     Serial.println("Connecting to MQTT..."); 
     if (client.connect("ESP8266Client", mqttUser, mqttPassword )) { 
@@ -320,6 +334,8 @@ void loop() {
   float pot = cor*rede;                                                                              
   float t = pega_temperatura(); 
   Serial.println(t);
+  
+  //prepara mensagem para ser enviada ao broker contendo os dados: temperatura-presenca-potencia-corrente
   String payload = "&";
  
   payload += t; payload += "&";
@@ -327,12 +343,12 @@ void loop() {
   payload += pot; payload += "&";
   payload += cor; payload += "&";
  
-  // Send payload to MQTT
+  //envia mensagem para o broker 
 
   char mensagem[300];
   payload.toCharArray(mensagem, 300 );
   
   client.loop();
   client.publish("iot/dados", mensagem);
-  delay(3000);
+  delay(3000); //tempo entre envios ao broker  (recomendacao: fazer por interrupcao de tempo)
 }

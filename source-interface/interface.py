@@ -1,3 +1,6 @@
+#Autor: Cristian de Biasi
+#co-autores: Juliano Rics e Valdecir Hoffmann
+
 from flask import Flask, flash, render_template, request, url_for, redirect, flash
 import os
 import paho.mqtt.client as mqtt
@@ -44,8 +47,6 @@ def man():
     client.publish('iot/comandos', payload= temp, qos=0, retain=False)
     return render_template("index.html", temp = temp)
             
-
-
 @app.route("/auto", methods=["GET", "POST"])
 
 def auto():    
@@ -79,12 +80,9 @@ def off():
     client.username_pw_set("grupo4", "grupo4_22")
     client.publish('iot/comandos', payload= "off", qos=0, retain=False) 
     return render_template("index.html")
-
-    
-time.sleep(0.5)
-webbrowser.open('http://127.0.0.1:5000/home')  # Go to IOT GUI   
-
-#if __name__ == '__main__':
+   
+time.sleep(0.25)
+webbrowser.open('http://127.0.0.1:5000/home')  # Go to IOT GUI  --> abre automaticamente a pagina web no browser 
 
 app.run(debug=True)
 
